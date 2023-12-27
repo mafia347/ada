@@ -1,40 +1,30 @@
-#include<bits/stdc++.h>
+#include<iostream>
 using namespace std;
+
 int main(){
-int n,a[n];
-cout<<"enter the size";
-cin>>n;
-cout<<"enter the elements";
-for(int i=0;i<n;i++)
-{
-cin>>a[i];
-}
-cout<<"\nbefore sorting\n";
-for(int i=0;i<n;i++)
-{
-cout<<a[i]<<" ";
-}
-cout<<"\n";
-clock_t start,end;
-start = clock();
-for(int i=0;i<n-1;i++)
-{
-for(int j=i+1;j<n;j++)
-{
-if(a[j]<a[i])
-{
-int temp = a[j];
-a[j]=a[i];
-a[i]=temp;
-}
-}
-}
-end = clock();
-cout<<"\nafter sorting\n";
-for(int i=0;i<n;i++){
-    cout<<a[i]<<" ";
-}
-double time_spent = (double)(end-start)/CLOCKS_PER_SEC;
-cout<<"\ntime spent: "<<time_spent;
-return 0;
+    cout<<"Enter no of elements : "<<endl;
+    int n;
+    cin>>n;
+
+    cout<<"Enter elements : "<<endl;
+    int arr[n];
+    for(int i=0; i<n; i++){
+        cin>>arr[i];
+    }
+
+    for(int i=0; i<n-1; i++){
+        for(int j=i+1; j<n; j++){
+            if(arr[j]<arr[i]){
+                int temp = arr[j];
+                arr[j] = arr[i];
+                arr[i] = temp;
+            }
+        }
+    }
+
+    cout<<"Sorted array : ";
+    for(int i=0; i<n; i++){
+        cout<<arr[i]<<" ";
+    }
+    return 0;
 }
