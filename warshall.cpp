@@ -1,81 +1,43 @@
 #include <iostream>
-#include<chrono>
-
 using namespace std;
 
-class TransitiveClosure {
-    int vertices;
-    int** adjacencyMatrix;
-
-public:
-    TransitiveClosure(int v) : vertices(v) {
-        adjacencyMatrix = new int*[vertices];
-        for (int i = 0; i < vertices; ++i) {
-            adjacencyMatrix[i] = new int[vertices];
-        }
-    }
-
-    void addEdge(int from, int to) {
-        adjacencyMatrix[from][to] = 1;
-    }
-
-    void warshallAlgorithm() {
-        for (int k = 0; k < vertices; ++k) {
-            for (int i = 0; i < vertices; ++i) {
-                for (int j = 0; j < vertices; ++j) {
-                    adjacencyMatrix[i][j] = adjacencyMatrix[i][j] || (adjacencyMatrix[i][k] && adjacencyMatrix[k][j]);
-                }
-            }
-        }
-    }
-
-    void displayTransitiveClosure() {
-        cout << "Transitive Closure Matrix:" << endl;
-        for (int i = 0; i < vertices; ++i) {
-            for (int j = 0; j < vertices; ++j) {
-                cout << adjacencyMatrix[i][j] << " ";
-            }
-            cout << endl;
-        }
-    }
-
-    ~TransitiveClosure() {
-        for (int i = 0; i < vertices; ++i) {
-            delete[] adjacencyMatrix[i];
-        }
-        delete[] adjacencyMatrix;
-    }
-};
-
+int max(int a, int b) {
+ return (a > b) ? a : b;
+}
+void warshall(int p[10][10], int n) {
+ for (int k = 1; k <= n; k++)
+ for (int i = 1; i <= n; i++)
+ for (int j = 1; j <= n; j++)
+ p[i][j] = max(p[i][j], p[i][k] && p[k][j]);
+}
 int main() {
-    int vertices, edges;
-    cout << "Enter the number of vertices and edges: ";
-    cin >> vertices >> edges;
-
-    // Start measuring time and space complexity
-    auto start_time = chrono::high_resolution_clock::now();
-
-    TransitiveClosure graph(vertices);
-
-    cout << "Enter the edges (from to):" << endl;
-    for (int i = 0; i < edges; ++i) {
-        int from, to;
-        cin >> from >> to;
-        graph.addEdge(from, to);
-    }
-
-    graph.warshallAlgorithm();
-    
-    graph.displayTransitiveClosure();
-
-    // Stop measuring time and space complexity
-    auto end_time = chrono::high_resolution_clock::now();
-    auto duration = chrono::duration_cast<chrono::microseconds>(end_time - start_time);
-
-    // Output time and space complexity
-    cout << "\nTime Complexity: O(V^3)" << endl;
-    cout << "Space Complexity: O(V^2)" << endl;
-    cout << "Execution Time: " << duration.count() << " microseconds" << endl;
-
-    return 0;
+ int p[10][10] = {0}, n, e, u, v;
+ // Input the number of systems and edges
+ cout << "\n Enter the number of systems (vertices):";
+ cin >> n;
+ cout << "\n Enter the number of connections (edges):";
+ cin >> e;
+ // Input the connections and populate the adjacency matrix
+ for (int i = 1; i <= e; i++) {
+ cout << "\n Enter the end systems of connection " << i << ":";
+ cin >> u >> v;
+ p[u][v] = 1;
+ }
+ // Display the adjacency matrix
+ cout << "\n Matrix of input data: \n";
+ for (int i = 1; i <= n; i++) {
+ for (int j = 1; j <= n; j++)
+ cout << p[i][j] << "\t";
+ cout << "\n";
+ }
+ // Apply Warshall's algorithm to find transitive closure
+ warshall(p, n);
+ // Display the transitive closure matrix
+ cout << "\n Transitive closure: \n";
+ for (int i = 1; i <= n; i++) {
+ for (int j = 1; j <= n; j++)
+ cout << p[i][j] << "\t";
+ cout << "\n";
+ }
+ return 0;
 }
