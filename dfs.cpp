@@ -1,58 +1,49 @@
 #include <iostream>
-#include <unordered_set>
-#include <unordered_map>
+#include <list>
+#include <vector>
 
 using namespace std;
 
-class Network {
-public:
-    void addConnection(int u, int v);
-    void dfs(int startSystem);
-
+class Graph {
 private:
-    unordered_map<int, unordered_set<int>> adjacencyList;
-    unordered_set<int> visited;
+    int vertices;
+    vector<list<int>> adjacencyList;
 
-    void explore(int system);
-};
+public:
+    Graph(int V) : vertices(V), adjacencyList(V) {}
 
-void Network::addConnection(int u, int v) {
-    adjacencyList[u].insert(v);
-    adjacencyList[v].insert(u);  // Assuming an undirected network
-}
+    void addEdge(int from, int to) {
+        adjacencyList[from].push_back(to);
+    }
 
-void Network::explore(int system) {
-    visited.insert(system);
-    cout << system << " ";
+    void DFSUtil(int vertex, vector<bool>& visited) {
+        visited[vertex] = true;
+        cout << vertex << " ";
 
-    for (int neighbor : adjacencyList[system]) {
-        if (visited.find(neighbor) == visited.end()) {
-            explore(neighbor);
+        for (int neighbor : adjacencyList[vertex]) {
+            if (!visited[neighbor]) {
+                DFSUtil(neighbor, visited);
+            }
         }
     }
-}
 
-void Network::dfs(int startSystem) {
-    cout << "Systems reachable from system " << startSystem << ": ";
-    explore(startSystem);
-    cout << endl;
-}
+    void DFS(int startVertex) {
+        vector<bool> visited(vertices, false);
+        cout << "DFS starting from vertex " << startVertex << ": ";
+        DFSUtil(startVertex, visited);
+    }
+};
 
 int main() {
-    Network network;
+    Graph g(6);
 
-    // Example: Adding connections in the network
-    network.addConnection(0, 1);
-    network.addConnection(0, 2);
-    network.addConnection(1, 3);
-    network.addConnection(2, 4);
-    network.addConnection(3, 4);
+    g.addEdge(0, 1);
+    g.addEdge(0, 2);
+    g.addEdge(1, 3);
+    g.addEdge(2, 4);
+    g.addEdge(2, 5);
 
-    // Specify the starting system
-    int startSystem = 0;
-
-    // Perform DFS and print the result
-    network.dfs(startSystem);
+    g.DFS(0);
 
     return 0;
 }
