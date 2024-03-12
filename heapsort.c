@@ -1,9 +1,9 @@
 #include <stdio.h>
 
-void heapify(int arr[], int n, int i){
-int largest = i; 
-int left = 2 * i + 1; 
-int right = 2 * i + 2; 
+void heapify(int arr[], int n, int i) {
+int largest = i;
+int left = 2 * i + 1;
+int right = 2 * i + 2;
 
 if (left < n && arr[left] > arr[largest])
 largest = left;
@@ -36,11 +36,11 @@ heapify(arr, i, 0);
 int main() {
 int x;
 printf("Enter the no of student id = ");
-scanf("%d",&x);
+scanf("%d", &x);
 int studentIds[x];
 printf("Enter student ids = ");
-for(int i=0; i<x; i++){
-scanf("%d",&studentIds[i]);
+for (int i = 0; i < x; i++) {
+scanf("%d", &studentIds[i]);
 }
 int n = sizeof(studentIds) / sizeof(studentIds[0]);
 
