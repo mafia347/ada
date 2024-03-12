@@ -1,53 +1,42 @@
-#include <stdio.h>
 #include <string.h>
+#include <stdio.h>
+int table[1000];
 
-#define ALPHABET_SIZE 256
-
-void preprocess_pattern(char pattern[], int m, int shift_table[]) {
-    for (int i = 0; i < ALPHABET_SIZE; i++) {
-        shift_table[i] = m;
-    }
-    for (int i = 0; i < m - 1; i++) {
-        shift_table[(unsigned char)pattern[i]] = m - 1 - i;
-    }
+void shift(char p[]){
+int len=strlen(p);
+for(int i=0;i<1000;i++)
+table[i]=len;
+for(int j=0;j<=len-2;j++)
+table[p[j]]=len-1-j;
 }
 
-void horspool_search(char dna_sequence[], char pattern[]) {
-    int n = strlen(dna_sequence);
-    int m = strlen(pattern);
-
-    if (m > n) {
-        printf("Pattern not found.\n");
-        return;
-    }
-
-    int shift_table[ALPHABET_SIZE];
-    preprocess_pattern(pattern, m, shift_table);
-
-    int i = m - 1;
-    while (i < n) {
-        int k = 0;
-        while (k < m && pattern[m - 1 - k] == dna_sequence[i - k]) {
-            k++;
-        }
-        if (k == m) {
-            printf("Pattern found at index %d.\n", i - m + 1);
-        }
-        i += shift_table[(unsigned char)dna_sequence[i]];
-    }
+int horspool(char p[], char t[]){
+shift(p);
+int m=strlen(p);
+int n=strlen(t);
+int i=m-1;
+while(i<n){
+int k=0;
+while(k<m && (p[m-1-k]==t[i-k]))
+k++;
+if(k==m)
+return i-m+1;
+else
+i=i+table[t[i]];
+}
+return -1;
 }
 
-int main() {
-    char dna_sequence[100];
-    char pattern[20];
-
-    printf("Enter the DNA sequence: ");
-    scanf("%s", dna_sequence);
-
-    printf("Enter the pattern to search: ");
-    scanf("%s", pattern);
-
-    horspool_search(dna_sequence, pattern);
-
-    return 0;
+int main(){
+char str[100],ptn[20];
+printf("Enter the text \n");
+gets(str);
+printf("Enter the pattern to be found \n");
+gets(ptn);
+int res=horspool(ptn,str);
+if(res==-1)
+printf("\nPattern not found\n");
+else
+printf("Pattern found at %d index \n",res);
+return 0;
 }
