@@ -1,77 +1,44 @@
 #include <stdio.h>
-#include <limits.h>
 
-#define INF 9999
-#define MAX 10
+int main(){
+int n;
+int a[10][10],s[10],d[10];
+int v,k,min,u;
+printf("Enter the number of vertices\n");
+scanf("%d",&n);
+printf("Enter the cost matrix \n");
+printf("Enter 999 if no edge between vertices \n");
+for(int i=1;i<=n;i++)
+for(int j=1;j<=n;j++)
+scanf("%d",&a[i][j]);
+printf("Enter the source vertex \n");
+scanf("%d",&v);
 
-void DijkstraAlgorithm(int Graph[MAX][MAX], int size, int start);
-
-void DijkstraAlgorithm(int Graph[MAX][MAX], int size, int start) {
-    int cost[MAX][MAX], distance[MAX], previous[MAX];
-    int visited_nodes[MAX], counter, minimum_distance, next_node, i, j;
-
-    for (i = 0; i < size; i++)
-        for (j = 0; j < size; j++)
-            if (Graph[i][j] == 0)
-                cost[i][j] = INF;
-            else
-                cost[i][j] = Graph[i][j];
-
-    for (i = 0; i < size; i++) {
-        distance[i] = cost[start][i];
-        previous[i] = start;
-        visited_nodes[i] = 0;
-    }
-
-    distance[start] = 0;
-    visited_nodes[start] = 1;
-    counter = 1;
-
-    while (counter < size - 1) {
-        minimum_distance = INF;
-
-        for (i = 0; i < size; i++)
-            if (distance[i] < minimum_distance && !visited_nodes[i]) {
-                minimum_distance = distance[i];
-                next_node = i;
-            }
-
-        visited_nodes[next_node] = 1;
-        for (i = 0; i < size; i++)
-            if (!visited_nodes[i])
-                if (minimum_distance + cost[next_node][i] < distance[i]) {
-                    distance[i] = minimum_distance + cost[next_node][i];
-                    previous[i] = next_node;
-                }
-        counter++;
-    }
-
-    printf("\nShortest distances from the source node to all other nodes:\n");
-    for (i = 0; i < size; i++)
-        if (i != start)
-            printf("Distance from %d to %d: %d\n", start, i, distance[i]);
+for(int i=1;i<=n;i++){
+s[i]=0;
+d[i]=a[v][i];
 }
 
-int main() {
-    int Graph[MAX][MAX], i, j, size, source;
+d[v]=0;
+s[v]=1;
 
-    printf("Enter the number of nodes: ");
-    scanf("%d", &size);
+for(k=2;k<=n;k++){
+min=999;
+for(int i=1;i<=n;i++)
+if(s[i]==0 && d[i]<min){
+min=d[i];
+u=i;
+}
+s[u]=1;
+for(int i=1;i<=n;i++)
+if(s[i]==0){
+if(d[i]>(d[u]+a[u][i]))
+d[i]=d[u]+a[u][i];
+}
+}
 
-    printf("Enter the adjacency matrix for the graph:\n");
-    for (i = 0; i < size; i++)
-        for (j = 0; j < size; j++)
-            scanf("%d", &Graph[i][j]);
-
-    printf("Enter the source node: ");
-    scanf("%d", &source);
-
-    if (source < 0 || source >= size) {
-        printf("Invalid source node. Exiting...\n");
-        return 1;
-    }
-
-    DijkstraAlgorithm(Graph, size, source);
-
-    return 0;
+printf("The shortest distance from %d is \n",v);
+for(int i=1;i<=n;i++)
+printf("%d-->%d=%d\n",v,i,d[i]);
+return 0;
 }
