@@ -1,43 +1,64 @@
+#define n 4
 #include <stdio.h>
-#include <math.h>
-int count=0,x[100];
+#include <stdbool.h>
 
-int place(int k,int i){
-for(int j=1;j<k;j++)
-if((x[j]==i) || (abs(x[j]-i)==abs(j-k)))
-return(0);
-return(1);
-}
-
-void nqueen(int k,int n){
-for(int i=1;i<=n;i++)
-if(place(k,i)){
-x[k]=i;
-if(k==n){
-count++;
-for(int j=1;j<=n;j++){
-for(int p=1;p<=n;p++)
-if(x[j]==p)
-printf(" q ");
+void printsol(int board[n][n]){
+for(int i=0;i<n;i++){
+for(int j=0;j<n;j++){
+if(board[i][j])
+printf("Q");
 else
-printf(" 0 ");
+printf(". ");
+}
 printf("\n");
 }
 }
-else
-nqueen(k+1,n);
-}
-printf("\n");
-}
 
+bool isSafe(int board[n][n],int row,int col){
+int i,j;
+
+for(i=0;i<col;i++)
+if(board[row][i])
+return false;
+
+for(i=row,j=col;i>=0&&j>=0;i--,j--)
+if(board[i][j])
+return false;
+
+for(i=row,j=col;j>=0&&i<n;i++,j--)
+if(board[i][j])
+return false;
+
+return true;
+
+}
+bool nqueen(int board[n][n],int col){
+if(col>=n)
+return true;
+for(int i=0;i<n;i++){
+if(isSafe(board,i,col)){
+board[i][col]=1;
+if(nqueen(board,col+1))
+return true;
+
+board[i][col]=0;
+}
+}
+return false;
+}
+bool solveNQ(){
+int board[n][n]={ { 0, 0, 0, 0 },
+{ 0, 0, 0, 0 },
+{ 0, 0, 0, 0 },
+{ 0, 0, 0, 0 } };
+if(!nqueen(board,0)){
+printf("sol not exists");
+return false;
+}
+printsol(board);
+return true;
+}
 int main(){
-int n;
-printf("Enter the number of queens: ");
-scanf("%d",&n);
-nqueen(1,n);
-if(count==0)
-printf("There is no solution for '%d - Queens' problem",n);
-else
-printf("Total number of solutions :%d",count);
+solveNQ();
 return 0;
 }
