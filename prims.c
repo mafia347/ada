@@ -1,66 +1,37 @@
 #include <stdio.h>
-#include <limits.h>
+int n,c[20][20],visited[20];
 
-#define MAX_VERTICES 10
-
-int minimumKey(int key[], int mstSet[], int n) {
-    int min = INT_MAX, minIndex;
-
-    for (int v = 0; v < n; v++) {
-        if (!mstSet[v] && key[v] < min) {
-            min = key[v];
-            minIndex = v;
-        }
-    }
-
-    return minIndex;
+void prim(){
+int a,b,count=0,cost=0;
+int min=999;
+visited[1]=1;
+while(count<n-1){
+min=999;
+for(int i=1;i<=n;i++)
+for(int j=1;j<=n;j++)
+if(visited[i] && !visited[j] && min>c[i][j]){
+min=c[i][j];
+a=i;
+b=j;
+}
+printf("%d--->%d = %d\n",a,b,c[a][b]);
+cost+=c[a][b];
+visited[b]=1;
+count++;
+}
+printf("Total cost of Spanning tree is %d",cost);
 }
 
-void prim(int graph[MAX_VERTICES][MAX_VERTICES], int n) {
-    int parent[MAX_VERTICES];
-    int key[MAX_VERTICES];
-    int mstSet[MAX_VERTICES];
-
-    for (int i = 0; i < n; i++) {
-        key[i] = INT_MAX;
-        mstSet[i] = 0;
-    }
-
-    key[0] = 0;
-    parent[0] = -1;
-
-    for (int count = 0; count < n - 1; count++) {
-        int u = minimumKey(key, mstSet, n);
-        mstSet[u] = 1;
-
-        for (int v = 0; v < n; v++) {
-            if (graph[u][v] && !mstSet[v] && graph[u][v] < key[v]) {
-                parent[v] = u;
-                key[v] = graph[u][v];
-            }
-        }
-    }
-
-    // Print the Minimum Cost Connections
-    printf("\nMinimum Cost Connections for Electrical Layout:\n");
-    for (int i = 1; i < n; i++)
-        printf("House %d <-> House %d    Cost: %d\n", parent[i] + 1, i + 1, graph[i][parent[i]]);
+int main(){
+printf("Enter number of vertices \n");
+scanf("%d",&n);
+printf("Enter the cost matrix \n");
+printf("Enter 999 if no direct edges \n");
+for(int i=1;i<=n;i++){
+for(int j=1;j<=n;j++)
+scanf("%d",&c[i][j]);
+visited[i]=0;
 }
-
-int main() {
-    int n;
-
-    printf("Enter the number of houses: ");
-    scanf("%d", &n);
-
-    int graph[MAX_VERTICES][MAX_VERTICES];
-
-    printf("Enter the adjacency matrix for the electrical layout:\n");
-    for (int i = 0; i < n; i++)
-        for (int j = 0; j < n; j++)
-            scanf("%d", &graph[i][j]);
-
-    prim(graph, n);
-
-    return 0;
+prim();
+return 0;
 }
